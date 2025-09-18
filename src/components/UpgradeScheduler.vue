@@ -39,6 +39,7 @@
                         <tr>
                             <th>Epoch</th>
                             <th>Start Slot</th>
+                            <th>Unix Time</th>
                             <th>UTC ({{tzOffset("UTC")}})</th>
                             <th>Moscow ({{tzOffset("Europe/Moscow")}})</th>
                             <th>Los Angeles ({{tzOffset("America/Los_Angeles")}})</th>
@@ -51,6 +52,7 @@
                         <tr :key="row.epoch" v-for="row in rows">
                             <td :class="roundNumberBackground(row.epoch)">{{row.epoch}}</td>
                             <td :class="roundNumberBackground(row.slot)">{{row.slot}}</td>
+                            <td>{{row.unixtime}}</td>
                             <td :class="timeBackground(row.slotTime, 'UTC')">{{inTimeZone(row.slotTime, "UTC")}}</td>
                             <td :class="timeBackground(row.slotTime, 'Europe/Moscow')">{{inTimeZone(row.slotTime, "Europe/Moscow")}}</td>
                             <td :class="timeBackground(row.slotTime, 'America/Los_Angeles')">{{inTimeZone(row.slotTime, "America/Los_Angeles")}}</td>
@@ -97,9 +99,10 @@
                     const epoch = dayStartEpoch + i;
                     const slot = epoch * this.config.slotsPerEpoch;
                     const slotTime = this.slotTime(slot);
+                    const unixtime = this.config.genesisTime + (slot * this.config.secondsPerSlot);
                     const isHistoricalRootBoundary = (slot % 8192 == 0)
                     if (isHistoricalRootBoundary || !this.boundaryOnly) {
-                        rows.push({epoch, slot, slotTime, isHistoricalRootBoundary});
+                        rows.push({epoch, slot, slotTime, unixtime, isHistoricalRootBoundary});
                     }
                 }
                 return rows;
